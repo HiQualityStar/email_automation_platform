@@ -46,11 +46,11 @@ export default function Home() {
     navigator.clipboard.writeText(summary);
   };
 
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
+  // const config = {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // };
 const sendEmail = async () => {
   try {
     const res = await axios.post(
