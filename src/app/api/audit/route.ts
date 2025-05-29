@@ -98,11 +98,16 @@ export async function POST(req: NextRequest) {
       finalSummaryResponse.choices[0]?.message?.content || "";
 
     return NextResponse.json({ summary: finalSummary, scraped: fullContent });
-  } catch (err: any) {
+ } catch (err: unknown) {
+  if (err instanceof Error) {
     console.error("Error:", err.message);
-    return NextResponse.json(
-      { error: "Failed to generate audit." },
-      { status: 500 }
-    );
+  } else {
+    console.error("Unknown error:", err);
   }
+  return NextResponse.json(
+    { error: "Failed to generate audit." },
+    { status: 500 }
+  );
+}
+
 }
