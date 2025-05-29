@@ -7,14 +7,17 @@ export default function Home() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [, setScraped] = useState("");
-  const [summary, setSummary] = useState("Hi.I am ...");
+  const [summary, setSummary] = useState("");
   const [error, setError] = useState("");
+  const [sendTo, setSendTo] = useState("");
+  const [subject, setSubject] = useState("");
 
   const handleSubmit = async () => {
     if (!url) return;
     setLoading(true);
     setScraped("");
     setSummary("");
+    setSubject(""); // reset
     setError("");
 
     try {
@@ -32,6 +35,13 @@ export default function Home() {
 
       setScraped(data.scraped);
       setSummary(data.summary);
+
+      // ✅ Extract subject from the first line like "Subject: Something"
+      const firstLine = data.summary
+        .split("\n")[0]
+        .replace(/^Subject:\s*/i, "")
+        .trim();
+      setSubject(firstLine);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -42,6 +52,7 @@ export default function Home() {
       setLoading(false);
     }
   };
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(summary);
   };
@@ -51,28 +62,33 @@ export default function Home() {
   //     "Content-Type": "application/json",
   //   },
   // };
-const sendEmail = async () => {
-  try {
-    const res = await axios.post(
-      "/api/send-audit",
-      {
-        to: "aurora980331@gmail.com",
-        subject: "Hotel",
-        text: summary,
-        html: `<div>${summary}</div>`,
-      }
-      // Optional: include headers like config if needed
-    );
-
-    if (res.data.success) {
-      console.log("Email sent successfully");
-    } else {
-      console.error("Email send failed:", res.data);
+  const sendEmail = async () => {
+    if (!sendTo) {
+      alert("Please enter email address");
+      return;
     }
-  } catch (error) {
-    console.error("Error sending email:", error);
-  }
-};
+
+    try {
+      const res = await axios.post(
+        "/api/send-audit",
+        {
+          to: sendTo,
+          subject: subject,
+          text: summary,
+          html: `<div>${summary}</div>`,
+        }
+        // Optional: include headers like config if needed
+      );
+
+      if (res.data.success) {
+        console.log("Email sent successfully");
+      } else {
+        console.error("Email send failed:", res.data);
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 font-sans text-gray-700 flex flex-col">
@@ -123,35 +139,57 @@ const sendEmail = async () => {
       </section>
 
       {/* Output Section */}
-      {/* {summary && ( */}
-        <section className="px-6 py-10 bg-white border-t border-gray-200">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+      {summary && (
+        <section className="px-6 py-12 bg-white border-t border-gray-200">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <h3 className="text-3xl font-bold text-gray-800">
               Client Email Draft
             </h3>
+
             <div className="relative">
+              <label
+                htmlFor="summary"
+                className="block text-sm font-medium text-gray-600 mb-2"
+              >
+                Draft Content
+              </label>
               <textarea
+                id="summary"
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 rows={12}
-                className="w-full p-4 border rounded-md font-mono text-sm bg-gray-50"
+                className="w-full p-4 border border-gray-300 rounded-md font-mono text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 onClick={copyToClipboard}
-                className="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                className="absolute top-3 right-3 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 shadow-md transition-all"
                 title="Copy to clipboard"
               >
                 <Copy size={16} />
               </button>
             </div>
-            <div>Send to</div>
-            <div>aurora980331@gmail.com</div>
-            <button onClick={sendEmail} className="">
+
+            <div className="space-y-1">
+              <label className="text-sm text-gray-600">Send to:</label>
+              <div className="text-base text-gray-800 font-medium">
+                <input
+                  className="border border-gray-600 rounded-md w-64 px-2"
+                  type="text"
+                  value={sendTo}
+                  onChange={(e) => setSendTo(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={sendEmail}
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 transition-all shadow"
+            >
               Send Email
             </button>
           </div>
         </section>
-      {/* )} */}
+      )}
 
       {/* Contact + Footer */}
       <footer
