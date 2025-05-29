@@ -1,0 +1,36 @@
+Cover letter
+Hi ,
+I’m excited to apply for this project. I have extensive experience integrating OpenAI’s GPT models with automation platforms like Make.com and ActiveCampaign, and I’ve successfully completed a similar project that automatically audits websites using client-submitted URLs, generates reports with ChatGPT, and delivers them via email.
+
+Why I'm a Strong Fit
+• ChatGPT Integrations: I’ve built multiple systems that pull data from structured and unstructured URLs (e.g., Airbnb, Booking.com) and turn it into customized summaries using GPT-4.
+• Automation Expertise: I’m highly skilled with Make.com for end-to-end automation – from webhook triggers, data parsing, to report delivery.
+• Email Systems: Integrated ActiveCampaign for email sequencing, dynamic personalization, and automated file delivery.
+• UX/Workflow Design: I build flows with simplicity, aiming for zero-friction client interaction.
+
+How the System Will Work
+1. Input Submission: User submits a form with a URL.
+2. URL Scraping and AI Analysis: A script fetches key content and feeds it to ChatGPT via API.
+3. Template Mapping: The AI fills in a pre-defined audit report format.
+4. Formatting: Generated content is styled using your branding (HTML/PDF).
+5. Automation: Make.com handles the workflow – webhook → ChatGPT → template → ActiveCampaign → email delivery.
+
+
+Previous Project Highlight
+I recently delivered a project for a digital marketing agency where users submitted competitor URLs. The system automatically:
+• Scraped key metrics
+• Used GPT to create side-by-side comparison reports
+• Styled them in PDF with company branding
+• Delivered reports via Make.com and Gmail API
+The client saw a 60% time reduction in generating custom audits.
+
+Deliverables
+• End-to-end AI pipeline with ChatGPT and automation
+• Fully working audit template integration
+• Branded PDF or HTML reports
+• Make.com scenario with ActiveCampaign integration
+• Deployment, documentation, and optimization
+
+I’m confident I can take this project forward and deliver results quickly and effectively. Let’s schedule a time to connect and discuss next steps.
+Thank you,
+Vitalii
