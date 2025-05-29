@@ -27,6 +27,12 @@ function splitText(text: string, maxTokens: number): string[] {
 }
 
 export async function POST(req: NextRequest) {
+  let time = 0;
+  const timer = setInterval(() => {
+    time += 1;
+    console.log(time);
+  }, 1000);
+
   const { url } = await req.json();
 
   if (!url) {
@@ -57,7 +63,7 @@ export async function POST(req: NextRequest) {
     const chunks = splitText(fullContent, MAX_CHUNK_TOKENS);
 
     const partialSummaries: string[] = [];
-    console.log("completed scraping");
+    console.log("completed scraping in ", time);
     for (const chunk of chunks) {
       const completion = await openai.chat.completions.create({
         model: "gpt-4",
@@ -96,18 +102,18 @@ export async function POST(req: NextRequest) {
 
     const finalSummary =
       finalSummaryResponse.choices[0]?.message?.content || "";
-
+    console.log("completed sudiet in ", time);
+    clearInterval(timer);
     return NextResponse.json({ summary: finalSummary, scraped: fullContent });
- } catch (err: unknown) {
-  if (err instanceof Error) {
-    console.error("Error:", err.message);
-  } else {
-    console.error("Unknown error:", err);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Error:", err.message);
+    } else {
+      console.error("Unknown error:", err);
+    }
+    return NextResponse.json(
+      { error: "Failed to generate audit." },
+      { status: 500 }
+    );
   }
-  return NextResponse.json(
-    { error: "Failed to generate audit." },
-    { status: 500 }
-  );
-}
-
 }
