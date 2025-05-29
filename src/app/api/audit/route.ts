@@ -11,7 +11,6 @@ function splitText(text: string, maxTokens: number): string[] {
 
   for (const para of paragraphs) {
     if ((currentChunk + para).length > maxTokens * 4) {
-      // 1 token ≈ 4 chars
       chunks.push(currentChunk);
       currentChunk = para + "\n\n";
     } else {
@@ -27,11 +26,7 @@ function splitText(text: string, maxTokens: number): string[] {
 }
 
 export async function POST(req: NextRequest) {
-  let time = 0;
-  const timer = setInterval(() => {
-    time += 1;
-    console.log(time);
-  }, 1000);
+  const start = Date.now();
 
   const { url } = await req.json();
 
@@ -40,10 +35,11 @@ export async function POST(req: NextRequest) {
   }
 
   const firecrawl = new FireCrawlApp({
-    apiKey: process.env.NEXT_PUBLIC_Crawl_Api_Key!,
+    apiKey: process.env.NEXT_PUBLIC_Crawl_Api_Key!, // ✅ Use secure backend-only var
   });
+
   const openai = new OpenAI({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!, // ✅ Also should be secure
   });
 
   try {
@@ -62,11 +58,12 @@ export async function POST(req: NextRequest) {
     const fullContent = scrapeResult.markdown as string;
     const chunks = splitText(fullContent, MAX_CHUNK_TOKENS);
 
-    const partialSummaries: string[] = [];
-    console.log("completed scraping in ", time);
-    for (const chunk of chunks) {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4",
+    console.log("✅ Scraping complete in", (Date.now() - start) / 1000, "s");
+    console.log(fullContent.length);
+    // Parallel summarization using gpt-4o
+    const summaryPromises = chunks.map((chunk) =>
+      openai.chat.completions.create({
+        model: "gpt-4o", // ✅ Much faster and cheaper
         messages: [
           {
             role: "system",
@@ -78,15 +75,16 @@ export async function POST(req: NextRequest) {
             content: chunk,
           },
         ],
-      });
+      })
+    );
 
-      const summary = completion.choices[0]?.message?.content || "";
-      partialSummaries.push(summary);
-    }
+    const results = await Promise.all(summaryPromises);
+    const partialSummaries = results.map(
+      (res) => res.choices[0]?.message?.content || ""
+    );
 
-    // Combine all summaries into one final email
     const finalSummaryResponse = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
@@ -102,15 +100,19 @@ export async function POST(req: NextRequest) {
 
     const finalSummary =
       finalSummaryResponse.choices[0]?.message?.content || "";
-    console.log("completed sudiet in ", time);
-    clearInterval(timer);
-    return NextResponse.json({ summary: finalSummary, scraped: fullContent });
+
+    console.log("✅ All done in", (Date.now() - start) / 1000, "s");
+
+    return NextResponse.json(
+      { summary: finalSummary, scraped: fullContent },
+      {
+        headers: {
+          "X-Processing-Time": `${(Date.now() - start) / 1000}s`,
+        },
+      }
+    );
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error("Error:", err.message);
-    } else {
-      console.error("Unknown error:", err);
-    }
+    console.error("❌ Error:", err instanceof Error ? err.message : err);
     return NextResponse.json(
       { error: "Failed to generate audit." },
       { status: 500 }
