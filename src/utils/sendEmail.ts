@@ -3,11 +3,13 @@ import nodemailer from "nodemailer";
 
 export async function sendEmail({
   to,
+  name,
   subject,
   text,
   html,
 }: {
   to: string;
+  name: string;
   subject: string;
   text?: string;
   html?: string;
@@ -21,7 +23,7 @@ export async function sendEmail({
   });
 
   const mailOptions = {
-    from: `"Your Name" <${process.env.EMAIL_USER}>`,
+    from: `${name} <${process.env.EMAIL_USER}>`,
     to,
     subject,
     text,

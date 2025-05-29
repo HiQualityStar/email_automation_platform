@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/utils/sendEmail";
 
 export async function POST(req: NextRequest) {
-  const { to, subject,text, html } = await req.json();
+  const { to,name, subject,text, html } = await req.json();
 
   try {
-    await sendEmail({ to, subject,text, html });
+    await sendEmail({ to,name, subject,text, html });
     return NextResponse.json({ success: true}, { status: 200 } );
   } catch (error) {
     console.error("Email error:", error);

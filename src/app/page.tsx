@@ -11,6 +11,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [subject, setSubject] = useState("");
+  const [name, setName] = useState("");
 
   const handleSubmit = async () => {
     if (!url) return;
@@ -66,6 +67,9 @@ export default function Home() {
     if (!sendTo) {
       alert("Please enter email address");
       return;
+    } else if (!name) {
+      alert("Please enter sender name");
+      return;
     }
 
     try {
@@ -73,6 +77,7 @@ export default function Home() {
         "/api/send-audit",
         {
           to: sendTo,
+          name: name,
           subject: subject,
           text: summary,
           html: `<div>${summary}</div>`,
@@ -168,25 +173,39 @@ export default function Home() {
                 <Copy size={16} />
               </button>
             </div>
+            <div className="flex gap-10">
+              <div className="space-y-1">
+                <label className="text-sm text-gray-600">Send to:</label>
+                <div className="text-base text-gray-800 font-medium">
+                  <input
+                    className="border border-gray-600 rounded-md w-64 px-2"
+                    type="text"
+                    value={sendTo}
+                    onChange={(e) => setSendTo(e.target.value)}
+                  />
+                </div>
+              </div>
 
-            <div className="space-y-1">
-              <label className="text-sm text-gray-600">Send to:</label>
-              <div className="text-base text-gray-800 font-medium">
-                <input
-                  className="border border-gray-600 rounded-md w-64 px-2"
-                  type="text"
-                  value={sendTo}
-                  onChange={(e) => setSendTo(e.target.value)}
-                />
+              <div className="space-y-1">
+                <label className="text-sm text-gray-600">Your name:</label>
+                <div className="text-base text-gray-800 font-medium">
+                  <input
+                    className="border border-gray-600 rounded-md w-64 px-2"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-
-            <button
-              onClick={sendEmail}
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 transition-all shadow"
-            >
-              Send Email
-            </button>
+            <div className="flex justify-end pr-10">
+              <button
+                onClick={sendEmail}
+                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 transition-all shadow"
+              >
+                Send Email
+              </button>
+            </div>
           </div>
         </section>
       )}
