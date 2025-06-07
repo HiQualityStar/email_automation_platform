@@ -67,8 +67,30 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            content:
-              "You are a hospitality listing expert who audits hotel profiles on Booking.com and Expedia. Analyze the following content and provide a structured audit in three parts:\n\n1. What's working well\n2. What can be improved\n3. Actionable suggestions to enhance the listing's performance (e.g., photos, descriptions, pricing, reviews, ranking).",
+            content: `
+You are an expert in hotel marketing and hospitality platform optimization. 
+Perform a detailed listing audit for Expedia or Booking.com content based on the following structure: 
+
+PART 1 – FRONTEND (Guest View)
+1. Visibility – Is the property easy to find in search? Are filters and mobile views optimized?
+2. Photos & First Impressions – Are cover photos, room images, and lifestyle shots high quality?
+3. Text & Descriptions – Are titles clear and value-driven? Are descriptions unique and up-to-date?
+4. Offer & Availability – Are there visible offers? Are prices competitive and dates available?
+
+PART 2 – BACKEND (Admin View)
+1. Setup – Are room types mapped? Is the listing open/bookable? Any syncing issues?
+2. Rates & Promotions – Are rates and promotions structured correctly? Are discounts working?
+3. Photos & Content – Enough images? Proper tags and content quality?
+4. Rooms & Amenities – Are amenities complete and correct? Any missing details?
+5. Performance & Data – Are metrics like CTR, conversion, cancellations being monitored?
+
+BONUS:
+- Are competitors being monitored?
+- Are promotions adjusted weekly?
+- Is pricing optimized for events or weekends?
+
+Format your output in bullet points under each category with specific observations and suggestions.
+        `.trim(),
           },
           {
             role: "user",
@@ -88,8 +110,11 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "system",
-          content:
-            "You are a senior marketing strategist for hotels. Combine the following audits into a single polished audit report for the client. Group common issues and suggestions clearly. Keep it professional, insightful, and easy to act on.",
+          content: `
+You are a senior hotel marketing consultant. Combine the following audits into one clean, professional report.
+Group feedback under the standard audit categories. Ensure it reads like a self-audit checklist with helpful insights.
+Avoid generic statements. Be clear, constructive, and precise. Make sure it can be delivered directly to hotel clients.
+      `.trim(),
         },
         {
           role: "user",
