@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
           {
             role: "system",
             content:
-              "You are a professional marketing assistant. Summarize the following content briefly:",
+              "You are a hospitality listing expert who audits hotel profiles on Booking.com and Expedia. Analyze the following content and provide a structured audit in three parts:\n\n1. What's working well\n2. What can be improved\n3. Actionable suggestions to enhance the listing's performance (e.g., photos, descriptions, pricing, reviews, ranking).",
           },
           {
             role: "user",
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
         {
           role: "system",
           content:
-            "You are a professional marketing assistant. Combine the following summaries into one polished, client-ready email. Be clear, concise, and professional.",
+            "You are a senior marketing strategist for hotels. Combine the following audits into a single polished audit report for the client. Group common issues and suggestions clearly. Keep it professional, insightful, and easy to act on.",
         },
         {
           role: "user",
