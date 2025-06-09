@@ -63,33 +63,20 @@ export async function POST(req: NextRequest) {
     // Parallel summarization using gpt-4o
     const summaryPromises = chunks.map((chunk) =>
       openai.chat.completions.create({
-        model: "gpt-4o", // ✅ Much faster and cheaper
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
             content: `
-You are an expert in hotel marketing and hospitality platform optimization. 
-Perform a detailed listing audit for Expedia or Booking.com content based on the following structure: 
+You are an expert in hotel marketing and listing optimization.
 
-PART 1 – FRONTEND (Guest View)
-1. Visibility – Is the property easy to find in search? Are filters and mobile views optimized?
-2. Photos & First Impressions – Are cover photos, room images, and lifestyle shots high quality?
-3. Text & Descriptions – Are titles clear and value-driven? Are descriptions unique and up-to-date?
-4. Offer & Availability – Are there visible offers? Are prices competitive and dates available?
+Carefully analyze the following content (which may not follow a strict structure). Identify any marketing or operational issues, inconsistencies, or missing opportunities related to a hotel listing — especially on platforms like Booking.com or Expedia.
 
-PART 2 – BACKEND (Admin View)
-1. Setup – Are room types mapped? Is the listing open/bookable? Any syncing issues?
-2. Rates & Promotions – Are rates and promotions structured correctly? Are discounts working?
-3. Photos & Content – Enough images? Proper tags and content quality?
-4. Rooms & Amenities – Are amenities complete and correct? Any missing details?
-5. Performance & Data – Are metrics like CTR, conversion, cancellations being monitored?
+Write clear, specific, and actionable feedback in bullet points. Avoid repeating the input or providing vague, generic tips. Only respond with high-quality insights that could realistically improve listing performance.
 
-BONUS:
-- Are competitors being monitored?
-- Are promotions adjusted weekly?
-- Is pricing optimized for events or weekends?
+Cover areas such as visibility, photos, descriptions, pricing, availability, amenities, promotions, booking readiness, data use, and competitor awareness — but **only if they are relevant in the content**. Do NOT force a structure.
 
-Format your output in bullet points under each category with specific observations and suggestions.
+Make your tone professional and helpful, as if this is being sent to a client.
         `.trim(),
           },
           {
@@ -111,10 +98,20 @@ Format your output in bullet points under each category with specific observatio
         {
           role: "system",
           content: `
-You are a senior hotel marketing consultant. Combine the following audits into one clean, professional report.
-Group feedback under the standard audit categories. Ensure it reads like a self-audit checklist with helpful insights.
-Avoid generic statements. Be clear, constructive, and precise. Make sure it can be delivered directly to hotel clients.
-      `.trim(),
+You are a senior hotel marketing consultant.
+
+Merge the following audit findings into a single, polished report. These insights came from multiple sources and may not follow any strict format — that’s fine.
+
+Your goal is to:
+- Combine all observations cleanly.
+- Remove repetition.
+- Organize them logically into helpful categories or groupings where it makes sense — but **don’t force any structure**.
+- Write in bullet points.
+- Ensure clarity, professionalism, and client-readiness.
+
+Avoid generic advice. Only include points that are meaningful and relevant.
+Keep it concise, specific, and insightful.
+    `.trim(),
         },
         {
           role: "user",
