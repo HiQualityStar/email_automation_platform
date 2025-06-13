@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mendable/firecrawl-js": "^1.25.2",
+    "apify": "^3.4.2",
     "axios": "^1.9.0",
     "lucide-react": "^0.511.0",
     "next": "15.1.8",

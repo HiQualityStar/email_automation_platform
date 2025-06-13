@@ -111,17 +111,22 @@ export default function Home() {
       {/* Hero Section */}
       <section className="flex-1 px-6 py-16 flex flex-col items-center text-center bg-gradient-to-br from-white to-emerald-50">
         <h2 className="text-4xl font-bold mb-4 text-gray-800 max-w-2xl">
-          Turn Any Website into a Client-Ready Report in Seconds
+          Generate Client-Ready Reports for OTA Sites Like Airbnb and
+          Booking.com
         </h2>
         <p className="text-lg mb-8 text-gray-600 max-w-xl">
-          Paste any URL and instantly generate a professional email summary for
-          your client. Perfect for marketers, agencies, and auditors.
+          Paste a listing URL from Airbnb, Booking.com, or similar OTA platforms
+          to instantly create a polished client email.
+          <span className="font-semibold text-red-500">
+            {" "}
+            Other websites are not supported and may not work properly.
+          </span>
         </p>
 
         <div className="w-full max-w-2xl space-y-4">
           <input
             type="text"
-            placeholder="Enter a URL (e.g. https://example.com)"
+            placeholder="Enter a URL (e.g. https://www.airbnb.com/rooms/116444626382131547)"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:outline-none"
